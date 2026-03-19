@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Actor 0 — Actions</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #181818;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 32px;
+  }
+
+  /* ── 공통 슬라이드 ── */
+  .slide {
+    width: 1280px;
+    height: 720px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 44px 56px 40px;
+    gap: 0;
+  }
+
+  /* 액센트 색상은 data-color로 관리 */
+  .slide[data-color="rose"]   { background: #21181a; --ac: #e87a8a; --ac2: rgba(232,122,138,0.18); --acb: rgba(232,122,138,0.35); --acl: rgba(232,122,138,0.08); }
+  .slide[data-color="teal"]   { background: #161f1e; --ac: #3fc2a8; --ac2: rgba(63,194,168,0.18);  --acb: rgba(63,194,168,0.35);  --acl: rgba(63,194,168,0.08); }
+  .slide[data-color="amber"]  { background: #1e1b14; --ac: #e8a84a; --ac2: rgba(232,168,74,0.18);  --acb: rgba(232,168,74,0.35);  --acl: rgba(232,168,74,0.08); }
+
+  /* 배경 장식 원 */
+  .slide::before {
+    content: '';
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 360px; height: 360px;
+    border-radius: 50%;
+    background: var(--ac2);
+    filter: blur(60px);
+    pointer-events: none;
+  }
+
+  /* ── 헤더 ── */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    flex-shrink: 0;
+  }
+  .header-left { display: flex; flex-direction: column; gap: 5px; }
+  .action-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ac);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .action-badge::before {
+    content: '';
+    width: 20px; height: 1.5px;
+    background: var(--ac);
+    display: block;
+  }
+  .action-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; padding-top: 4px; }
+  .tag {
+    font-size: 11px;
+    padding: 3px 11px;
+    border-radius: 99px;
+    background: var(--ac2);
+    color: var(--ac);
+    border: 0.5px solid var(--acb);
+  }
+
+  /* ── 구분선 ── */
+  .divider {
+    width: 100%; height: 0.5px;
+    background: rgba(255,255,255,0.1);
+    flex-shrink: 0;
+    margin-bottom: 18px;
+  }
+
+  /* ── 본문 그리드: 2행 3열 ── */
+  .body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* 빈 공간 (이미지 삽입용) */
+  .empty-cell {
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+  }
+
+  /* ── 카드 공통 ── */
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .card.accent {
+    background: var(--acl);
+    border-color: var(--acb);
+  }
+  .card-title {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--ac);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .card-body {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+    flex: 1;
+    overflow: hidden;
+  }
+  .card-body b { color: rgba(255,255,255,0.92); font-weight: 500; }
+
+  /* 아이템 리스트 (Artifacts) */
+  .item-list { display: flex; flex-direction: column; gap: 0; flex: 1; overflow: hidden; }
+  .item {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.5;
+    padding: 5px 0;
+    border-bottom: 0.5px solid rgba(255,255,255,0.07);
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .item:last-child { border-bottom: none; padding-bottom: 0; }
+  .item b { color: rgba(255,255,255,0.92); font-weight: 500; min-width: fit-content; }
+
+  /* Pain point 리스트 */
+  .pain-list { display: flex; flex-direction: column; gap: 0; flex: 1; overflow: hidden; }
+  .pain {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.55;
+    padding: 6px 0 6px 12px;
+    border-bottom: 0.5px solid rgba(255,255,255,0.07);
+    position: relative;
+  }
+  .pain:last-child { border-bottom: none; }
+  .pain::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 12px;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--ac);
+    opacity: 0.7;
+  }
+  .pain b { color: rgba(255,255,255,0.92); font-weight: 500; }
+
+  /* Reviews 인용 */
+  .review-box {
+    background: rgba(255,255,255,0.03);
+    border-left: 2px solid var(--ac);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+    font-style: italic;
+    flex: 1;
+    overflow: hidden;
+  }
+  .review-box b { color: rgba(255,255,255,0.85); font-weight: 500; font-style: normal; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     ACTION 1
+════════════════════════════════════════ -->
+<div class="slide" data-color="rose">
+  <div class="header">
+    <div class="header-left">
+      <span class="action-badge">Actor 0 · Topic 1</span>
+      <div class="action-title">임신 중 몸의 변화와 이상 신호를<br>확인하고 불안에 대응한다</div>
+    </div>
+    <div class="tags">
+      <span class="tag">#배뭉침</span>
+      <span class="tag">#배아픔</span>
+      <span class="tag">#출혈</span>
+      <span class="tag">#착상혈</span>
+      <span class="tag">#감기약</span>
+      <span class="tag">#영양제</span>
+      <span class="tag">#허리통증</span>
+      <span class="tag">#임신초기</span>
+      <span class="tag">#증상확인</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="body-grid">
+
+    <!-- 1행 1열: 빈 공간 -->
+    <div class="empty-cell"></div>
+
+    <!-- 1행 2열: NEEDS -->
+    <div class="card accent">
+      <div class="card-title">Needs</div>
+      <div class="pain-list">
+        <div class="pain">지금 이 증상이 <b>정상인지 아닌지</b> 빠르게 알고 싶다</div>
+        <div class="pain">작은 통증·출혈도 <b>임신과 연관된 건지</b> 즉시 확인하고 싶다</div>
+        <div class="pain">감기약·영양제 등 <b>임신 중 복용 가능 여부</b>를 신뢰할 수 있게 알고 싶다</div>
+        <div class="pain">불안을 줄여줄 <b>정확하고 빠른 정보</b>가 필요하다</div>
+      </div>
+    </div>
+
+    <!-- 1행 3열: ARTIFACTS -->
+    <div class="card">
+      <div class="card-title">Artifacts</div>
+      <div class="item-list">
+        <div class="item"><b>맘카페·커뮤니티</b> — 증상 공유 및 경험담 수집</div>
+        <div class="item"><b>포털 검색</b> — "임신 중 ○○ 증상 정상인가요" 즉각 검색</div>
+        <div class="item"><b>산부인과</b> — 이상 신호 확인 시 직접 방문</div>
+        <div class="item"><b>임신 앱</b> — 주차별 증상 체크리스트 확인</div>
+      </div>
+    </div>
+
+    <!-- 2행 1열: 빈 공간 -->
+    <div class="empty-cell"></div>
+
+    <!-- 2행 2열: PAIN POINTS -->
+    <div class="card">
+      <div class="card-title">Pain Points</div>
+      <div class="pain-list">
+        <div class="pain">검색 결과가 너무 많아 <b>어떤 정보가 맞는지</b> 판단하기 어렵다</div>
+        <div class="pain">비슷한 증상 글이 많아도 <b>내 상황과 정확히 같은 케이스</b>를 찾기 힘들다</div>
+        <div class="pain">병원에 가기엔 애매하고, <b>그냥 넘기자니 불안</b>한 상태가 반복된다</div>
+      </div>
+    </div>
+
+    <!-- 2행 3열: REVIEWS (추후 업데이트) -->
+    <div class="card">
+      <div class="card-title">Reviews</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     ACTION 2
+════════════════════════════════════════ -->
+<div class="slide" data-color="teal">
+  <div class="header">
+    <div class="header-left">
+      <span class="action-badge">Actor 0 · Topic 2</span>
+      <div class="action-title">검사·진료·분만 방식을 비교하고<br>가장 안전한 출산 경로를 결정한다</div>
+    </div>
+    <div class="tags">
+      <span class="tag">#임당</span>
+      <span class="tag">#기형아검사</span>
+      <span class="tag">#니프티</span>
+      <span class="tag">#양수검사</span>
+      <span class="tag">#유도분만</span>
+      <span class="tag">#자연분만</span>
+      <span class="tag">#제왕절개</span>
+      <span class="tag">#대학병원</span>
+      <span class="tag">#출산결정</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="body-grid">
+
+    <!-- 1행 1열: 빈 공간 -->
+    <div class="empty-cell"></div>
+
+    <!-- 1행 2열: NEEDS -->
+    <div class="card accent">
+      <div class="card-title">Needs</div>
+      <div class="pain-list">
+        <div class="pain">니프티·양수검사 중 <b>나에게 맞는 선택</b>이 무엇인지 알고 싶다</div>
+        <div class="pain">유도분만·자연분만·제왕절개의 <b>장단점을 객관적으로 비교</b>하고 싶다</div>
+        <div class="pain">후기와 경험담을 바탕으로 <b>후회 없는 결정</b>을 내리고 싶다</div>
+        <div class="pain">의사 권유와 내 의사 사이에서 <b>올바른 판단 기준</b>을 갖고 싶다</div>
+      </div>
+    </div>
+
+    <!-- 1행 3열: ARTIFACTS -->
+    <div class="card">
+      <div class="card-title">Artifacts</div>
+      <div class="item-list">
+        <div class="item"><b>맘카페·후기 게시판</b> — 분만 방식별 실제 경험 수집</div>
+        <div class="item"><b>산부인과·대학병원</b> — 검사 결과 및 의사 상담</div>
+        <div class="item"><b>유튜브</b> — 니프티·양수검사·분만 방식 비교 영상</div>
+        <div class="item"><b>포털 검색</b> — 검사 비용·과정·후기 비교 정보</div>
+      </div>
+    </div>
+
+    <!-- 2행 1열: 빈 공간 -->
+    <div class="empty-cell"></div>
+
+    <!-- 2행 2열: PAIN POINTS -->
+    <div class="card">
+      <div class="card-title">Pain Points</div>
+      <div class="pain-list">
+        <div class="pain">선택지가 많아 <b>무엇이 더 안전한지</b> 스스로 판단하기 어렵다</div>
+        <div class="pain">병원마다 권유 방식이 달라 <b>어느 기준을 믿어야 할지</b> 혼란스럽다</div>
+        <div class="pain">잘못된 선택에 대한 <b>두려움과 책임감</b>이 의사결정을 더 어렵게 만든다</div>
+      </div>
+    </div>
+
+    <!-- 2행 3열: REVIEWS (추후 업데이트) -->
+    <div class="card">
+      <div class="card-title">Reviews</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     ACTION 3
+════════════════════════════════════════ -->
+<div class="slide" data-color="amber">
+  <div class="header">
+    <div class="header-left">
+      <span class="action-badge">Actor 0 · Topic 3</span>
+      <div class="action-title">출산 전후 회복과 초기 육아 준비를<br>빠짐없이 챙기며 생활을 안정시킨다</div>
+    </div>
+    <div class="tags">
+      <span class="tag">#조리원</span>
+      <span class="tag">#입덧약</span>
+      <span class="tag">#태아보험</span>
+      <span class="tag">#예방접종</span>
+      <span class="tag">#약복용</span>
+      <span class="tag">#산후회복</span>
+      <span class="tag">#수액</span>
+      <span class="tag">#육아준비</span>
+      <span class="tag">#생활관리</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="body-grid">
+
+    <!-- 1행 1열: 빈 공간 -->
+    <div class="empty-cell"></div>
+
+    <!-- 1행 2열: NEEDS -->
+    <div class="card accent">
+      <div class="card-title">Needs</div>
+      <div class="pain-list">
+        <div class="pain">입덧·몸 관리부터 조리원·보험까지 <b>한 번에 놓치지 않고</b> 챙기고 싶다</div>
+        <div class="pain">출산 후 회복을 위해 <b>내 상황에 맞는 조리원</b>을 제대로 고르고 싶다</div>
+        <div class="pain">태아보험·예방접종 등 <b>시기를 놓치면 안 되는 것들</b>을 미리 파악하고 싶다</div>
+        <div class="pain">출산 이후의 생활을 <b>실질적이고 안정적으로</b> 준비하고 싶다</div>
+      </div>
+    </div>
+
+    <!-- 1행 3열: ARTIFACTS -->
+    <div class="card">
+      <div class="card-title">Artifacts</div>
+      <div class="item-list">
+        <div class="item"><b>산후조리원 후기</b> — 비용·서비스·시설 비교의 핵심 근거</div>
+        <div class="item"><b>보험 비교 사이트</b> — 태아보험 상품 탐색 및 비교</div>
+        <div class="item"><b>맘카페·커뮤니티</b> — 입덧약·예방접종 경험 공유</div>
+        <div class="item"><b>병원·약국</b> — 입덧약 처방, 수액 및 영양 관리</div>
+      </div>
+    </div>
+
+    <!-- 2행 1열: 빈 공간 -->
+    <div class="empty-cell"></div>
+
+    <!-- 2행 2열: PAIN POINTS -->
+    <div class="card">
+      <div class="card-title">Pain Points</div>
+      <div class="pain-list">
+        <div class="pain">준비해야 할 항목이 많아 <b>무엇부터 시작해야 할지</b> 막막하다</div>
+        <div class="pain">조리원·보험·예방접종이 <b>각기 다른 채널</b>에 흩어져 있어 한 번에 파악이 어렵다</div>
+        <div class="pain">출산 후 몸이 힘든 상태에서 <b>육아 준비까지 동시에</b> 해야 한다는 부담감</div>
+      </div>
+    </div>
+
+    <!-- 2행 3열: REVIEWS (추후 업데이트) -->
+    <div class="card">
+      <div class="card-title">Reviews</div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
