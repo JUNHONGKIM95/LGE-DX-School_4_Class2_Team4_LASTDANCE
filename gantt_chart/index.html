@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DX 프로젝트 간트 차트</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #F1E3DA;
+    --surface: #faf3ef;
+    --surface2: #ecddd5;
+    --border: #d9c2b5;
+    --border-soft: #e5d0c5;
+    --text-primary: #2a0f08;
+    --text-secondary: #7a4a38;
+    --text-muted: #b08870;
+    --base: #51061C;
+
+    --bx: #8B2040;
+    --cx: #A84430;
+    --dx: #51061C;
+    --fi: #7A4A10;
+
+    --row-h: 36px;
+    --header-h: 52px;
+    --label-w: 258px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 20px 28px 24px;
+  }
+
+  /* ── Header ── */
+  .page-header {
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .header-left {}
+  .eyebrow {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 2.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--base);
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+  }
+  .project-subject {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+    letter-spacing: 0.2px;
+  }
+  .date-range {
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-muted);
+  }
+  .team-members {
+    text-align: right;
+    font-size: 14px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    padding-top: 4px;
+  }
+  .team-members .team-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .team-members .team-label {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    margin: 10px 0 12px;
+    padding: 8px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: fit-content;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+  }
+  .legend-swatch {
+    width: 20px; height: 7px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── Chart ── */
+  .chart-wrapper {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 20px rgba(81,6,28,0.09);
+  }
+  .chart-grid {
+    display: grid;
+    grid-template-columns: var(--label-w) 1fr;
+  }
+
+  /* ── Label col ── */
+  .label-col { border-right: 1.5px solid var(--border); }
+
+  .label-col-header {
+    height: var(--header-h);
+    min-height: var(--header-h);
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    border-bottom: 1.5px solid var(--border);
+    background: var(--surface2);
+    white-space: nowrap;
+  }
+  .label-col-header span {
+    font-size: 12px;
+    font-weight: 100;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-family: 'Noto Sans KR', sans-serif;
+    display: inline-block;
+  }
+
+  .phase-header {
+    height: var(--row-h);
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 7px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--surface2);
+  }
+
+  .phase-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .task-row-label {
+    height: var(--row-h);
+    display: flex;
+    align-items: center;
+    padding: 0 14px 0 28px;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 12px;
+    color: var(--text-secondary);
+    gap: 6px;
+  }
+  .task-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    color: var(--text-muted);
+    min-width: 16px;
+    flex-shrink: 0;
+  }
+
+  /* ── Timeline col ── */
+  .timeline-col { overflow-x: hidden; }
+  .timeline-inner { width: 100%; position: relative; box-sizing: border-box; padding-right: 16px; }
+
+  /* Date header */
+  .date-header-row {
+    height: var(--header-h);
+    position: relative;
+    border-bottom: 1.5px solid var(--border);
+    background: var(--surface2);
+    overflow: hidden;
+  }
+
+  .month-band {
+    position: absolute;
+    top: 0; bottom: 0;
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 0 0 8px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-muted);
+    border-right: 1px solid var(--border);
+    pointer-events: none;
+  }
+
+  .date-tick-label {
+    position: absolute;
+    bottom: 9px;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-muted);
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    pointer-events: none;
+  }
+  .tick-nub { width:1px; height:5px; background:var(--border); }
+
+  /* Today */
+  .today-line {
+    position: absolute;
+    top:0; bottom:0;
+    width: 1.5px;
+    background: rgba(81,6,28,0.45);
+    z-index: 20;
+    pointer-events: none;
+  }
+  .today-badge {
+    position: absolute;
+    top: 7px;
+    transform: translateX(-50%);
+    font-size: 8px;
+    font-family: 'DM Mono', monospace;
+    color: var(--base);
+    background: #e5c6b5;
+    border: 1px solid rgba(81,6,28,0.4);
+    padding: 1px 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 21;
+  }
+
+  /* Rows */
+  .tl-phase-header {
+    height: var(--row-h);
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .tl-task-row {
+    height: var(--row-h);
+    position: relative;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  /* V lines */
+  .v-line {
+    position: absolute;
+    top:0; bottom:0;
+    width: 1px;
+    background: var(--border-soft);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Bar */
+  .gantt-bar {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 16px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 9px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    cursor: default;
+    z-index: 5;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.18);
+    animation: barIn 0.55s cubic-bezier(.23,1,.32,1) both;
+    transition: filter 0.15s, transform 0.15s;
+  }
+  .gantt-bar:hover {
+    filter: brightness(1.12);
+    transform: translateY(-50%) scaleY(1.1);
+    z-index: 10;
+  }
+
+  @keyframes barIn {
+    from { opacity:0; clip-path:inset(0 100% 0 0 round 4px); }
+    to   { opacity:1; clip-path:inset(0 0% 0 0 round 4px); }
+  }
+
+  .phase-underline {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 3px;
+    border-radius: 2px;
+    opacity: 0.2;
+    z-index: 2;
+  }
+
+  .point-marker {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 6;
+    cursor: default;
+    transition: transform 0.15s;
+  }
+  .point-marker:hover { transform: translate(-50%,-50%) scale(1.25); }
+  .point-inner { width:7px; height:7px; border-radius:50%; }
+
+  /* Footer */
+  .footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="header-left">
+    <div class="eyebrow">Project Schedule · 2026</div>
+    <h1>DX 프로젝트 일정 (2반 4팀 LAST DANCE)</h1>
+    <div class="project-subject">LG ThinQ Parenting Mode</div>
+    <div class="date-range">2026.02.19 – 2026.03.26 &nbsp;·&nbsp; 총 36일</div>
+  </div>
+  <div class="team-members">
+    <div class="team-label">Team Members</div>
+    <div>김준홍</div>
+    <div>박성원</div>
+    <div>박하은</div>
+    <div>송상준</div>
+    <div>이도한</div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch" style="background:#8B2040"></div>BX — 비즈니스 문제정의</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#A84430"></div>CX — 고객경험 수집·분석</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#51061C"></div>DX — 소프트웨어 개발</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#7A4A10"></div>EX — 산출물 도출 및 최종발표</div>
+</div>
+
+<div class="chart-wrapper">
+  <div class="chart-grid">
+
+    <!-- ── Label column ── -->
+    <div class="label-col">
+      <div class="label-col-header"><span>작업 항목</span></div>
+
+      <div class="phase-header" style="color:#8B2040">
+        <span class="phase-badge" style="background:rgba(139,32,64,0.12);color:#8B2040">BX</span>비즈니스 문제정의
+      </div>
+      <div class="task-row-label"><span class="task-num">1.1</span>기획회의</div>
+      <div class="task-row-label"><span class="task-num">1.2</span>추진배경</div>
+      <div class="task-row-label"><span class="task-num">1.3</span>고객 감동 목표</div>
+      <div class="task-row-label"><span class="task-num">1.4</span>데이터 수집 전략</div>
+
+      <div class="phase-header" style="color:#A84430">
+        <span class="phase-badge" style="background:rgba(168,68,48,0.12);color:#A84430">CX</span>고객경험 수집·분석
+      </div>
+      <div class="task-row-label"><span class="task-num">2.1</span>타깃고객</div>
+      <div class="task-row-label"><span class="task-num">2.2</span>핵심 고객 경험</div>
+      <div class="task-row-label"><span class="task-num">2.3</span>핵심 경험 컨셉</div>
+
+      <div class="phase-header" style="color:#51061C">
+        <span class="phase-badge" style="background:rgba(81,6,28,0.12);color:#51061C">DX</span>소프트웨어 개발
+      </div>
+      <div class="task-row-label"><span class="task-num">3.1</span>설계</div>
+      <div class="task-row-label"><span class="task-num">3.2</span>개발</div>
+      <div class="task-row-label"><span class="task-num">3.3</span>Performance Trackers</div>
+
+      <div class="phase-header" style="color:#7A4A10">
+        <span class="phase-badge" style="background:rgba(122,74,16,0.12);color:#7A4A10">EX</span>산출물 도출 및 최종발표
+      </div>
+      <div class="task-row-label"><span class="task-num">4.1</span>폼보드 제작</div>
+      <div class="task-row-label"><span class="task-num">4.2</span>사전심사 동영상 제작</div>
+      <div class="task-row-label"><span class="task-num">4.3</span>최종산출문서 제작</div>
+      <div class="task-row-label"><span class="task-num">4.4</span>발표자료 제작</div>
+      <div class="task-row-label" style="border-bottom:none"><span class="task-num">4.5</span>최종발표</div>
+    </div>
+
+    <!-- ── Timeline column ── -->
+    <div class="timeline-col">
+      <div class="timeline-inner" id="timeline"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+  <span>● 단일 일정 &nbsp;|&nbsp; ━ 기간 일정</span>
+</div>
+
+<script>
+const START = new Date(2026, 1, 19);
+const END   = new Date(2026, 2, 26);
+const TOTAL = Math.round((END - START) / 86400000) + 1;
+
+function d(m, day) { return new Date(2026, m-1, day); }
+function pct(date) {
+  const days = Math.round((date - START) / 86400000);
+  return Math.max(0, Math.min(1, days / (TOTAL - 1)));
+}
+
+// Ticks every ~4 days — first tick at 0% so label isn't clipped
+const ticks = [
+  {m:2,day:19},{m:2,day:23},{m:2,day:27},
+  {m:3,day:3},{m:3,day:7},{m:3,day:11},
+  {m:3,day:15},{m:3,day:19},{m:3,day:23},
+  {m:3,day:26}
+];
+
+// Month bands
+const monthBands = [
+  { label:'FEB', start: d(2,19), end: d(2,28) },
+  { label:'MAR', start: d(3,1),  end: d(3,26) },
+];
+
+const phases = [
+  {
+    color:'#8B2040',
+    start:d(2,19), end:d(3,16),
+    tasks:[
+      { start:d(2,19), end:d(2,27), label:'기획회의' },
+      { start:d(2,25), end:d(3,16), label:'추진배경' },
+      { start:d(2,25), end:d(3,16), label:'고객 감동 목표' },
+      { start:d(2,26), end:d(3,4),  label:'데이터 수집 전략' },
+    ]
+  },
+  {
+    color:'#A84430',
+    start:d(3,3), end:d(3,17),
+    tasks:[
+      { start:d(3,3),  end:d(3,17), label:'타깃고객' },
+      { start:d(3,4),  end:d(3,17), label:'핵심 고객 경험' },
+      { start:d(3,10), end:d(3,17), label:'핵심 경험 컨셉' },
+    ]
+  },
+  {
+    color:'#51061C',
+    start:d(3,11), end:d(3,23),
+    tasks:[
+      { start:d(3,11), end:d(3,17), label:'설계' },
+      { start:d(3,13), end:d(3,23), label:'개발' },
+      { start:d(3,19), end:null,    label:'Performance Trackers' },
+    ]
+  },
+  {
+    color:'#7A4A10',
+    start:d(3,19), end:d(3,26),
+    tasks:[
+      { start:d(3,19), end:d(3,20), label:'폼보드 제작' },
+      { start:d(3,23), end:d(3,24), label:'사전심사 동영상 제작' },
+      { start:d(3,19), end:d(3,24), label:'최종산출문서 제작' },
+      { start:d(3,19), end:d(3,26), label:'발표자료 제작' },
+      { start:d(3,27), end:null,    label:'최종발표' },
+    ]
+  }
+];
+
+const tl = document.getElementById('timeline');
+
+function addVLines(el) {
+  ticks.forEach(t => {
+    const vl = document.createElement('div');
+    vl.className = 'v-line';
+    vl.style.left = `${pct(d(t.m, t.day)) * 100}%`;
+    el.appendChild(vl);
+  });
+}
+
+// Date header
+const hRow = document.createElement('div');
+hRow.className = 'date-header-row';
+addVLines(hRow);
+
+// Month bands
+monthBands.forEach(mb => {
+  const band = document.createElement('div');
+  band.className = 'month-band';
+  const lp = pct(mb.start)*100;
+  const rp = pct(mb.end)*100;
+  band.style.left = `${lp}%`;
+  band.style.width = `${rp - lp}%`;
+  band.textContent = mb.label;
+  hRow.appendChild(band);
+});
+
+// Tick labels — first tick uses left-align to avoid clipping
+ticks.forEach((t, i) => {
+  const tick = document.createElement('div');
+  tick.className = 'date-tick-label';
+  const leftPct = pct(d(t.m, t.day)) * 100;
+  tick.style.left = `${leftPct}%`;
+  if (i === 0) {
+    tick.style.transform = 'translateX(2px)';
+    tick.style.alignItems = 'flex-start';
+  } else if (i === ticks.length - 1) {
+    tick.style.transform = 'translateX(calc(-100% - 2px))';
+    tick.style.alignItems = 'flex-end';
+  }
+  tick.innerHTML = `<div class="tick-nub"></div>${t.day}`;
+  hRow.appendChild(tick);
+});
+
+tl.appendChild(hRow);
+
+// Phases & tasks
+let aIdx = 0;
+phases.forEach(phase => {
+  const phRow = document.createElement('div');
+  phRow.className = 'tl-phase-header';
+  addVLines(phRow);
+  const ul = document.createElement('div');
+  ul.className = 'phase-underline';
+  ul.style.cssText = `left:${pct(phase.start)*100}%;width:${(pct(phase.end)-pct(phase.start))*100}%;background:${phase.color}`;
+  phRow.appendChild(ul);
+  tl.appendChild(phRow);
+
+  phase.tasks.forEach(task => {
+    const row = document.createElement('div');
+    row.className = 'tl-task-row';
+    addVLines(row);
+
+    if (!task.end) {
+      const pm = document.createElement('div');
+      pm.className = 'point-marker';
+      pm.style.cssText = `left:${pct(task.start)*100}%;border-color:${phase.color}`;
+      pm.title = `${task.label}: ${task.start.getMonth()+1}/${task.start.getDate()}`;
+      const inner = document.createElement('div');
+      inner.className = 'point-inner';
+      inner.style.background = phase.color;
+      pm.appendChild(inner);
+      row.appendChild(pm);
+    } else {
+      const bar = document.createElement('div');
+      bar.className = 'gantt-bar';
+      const lp = pct(task.start)*100;
+      const wp = (pct(task.end)-pct(task.start))*100;
+      bar.style.cssText = `left:${lp}%;width:${wp}%;background:${phase.color};animation-delay:${aIdx*0.055}s`;
+      bar.title = `${task.label}: ${task.start.getMonth()+1}/${task.start.getDate()} ~ ${task.end.getMonth()+1}/${task.end.getDate()}`;
+      row.appendChild(bar);
+      aIdx++;
+    }
+    tl.appendChild(row);
+  });
+});
+</script>
+</body>
+</html>
