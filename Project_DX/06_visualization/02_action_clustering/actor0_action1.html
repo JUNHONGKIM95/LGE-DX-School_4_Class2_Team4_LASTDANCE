@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Actor 0 — Action 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #e8e0d8;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 32px;
+  }
+
+  /* ── 공통 슬라이드 ── */
+  .slide {
+    width: 1280px;
+    height: 720px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #f5f0eb;
+    border-radius: 8px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  }
+
+  /* ── 헤더 (상단 바) ── */
+  .header {
+    background: linear-gradient(135deg, #8b1a2b 0%, #a62639 100%);
+    padding: 22px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .header-left { display: flex; flex-direction: column; gap: 4px; }
+  .action-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+  }
+  .action-subtitle {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+  }
+  .header-right {
+    text-align: right;
+    color: rgba(255,255,255,0.85);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  /* ── 태그 바 ── */
+  .tags-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px 40px;
+    background: rgba(166,38,57,0.08);
+    border-bottom: 1px solid rgba(166,38,57,0.1);
+    flex-shrink: 0;
+  }
+  .tag {
+    font-size: 11px;
+    padding: 3px 12px;
+    border-radius: 99px;
+    background: #fff;
+    color: #a62639;
+    border: 1px solid rgba(166,38,57,0.2);
+    font-weight: 500;
+  }
+
+  /* ── 본문 그리드 ── */
+  .body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 14px;
+    flex: 1;
+    min-height: 0;
+    padding: 16px 24px 20px;
+  }
+
+  /* ── 이미지 셀 ── */
+  .img-cell {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .img-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* ── 카드 공통 ── */
+  .card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 10px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .card.accent {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+
+  /* 카드 타이틀 (번호 뱃지 스타일) */
+  .card-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #a62639;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    padding-bottom: 6px;
+    border-bottom: 1.5px solid rgba(166,38,57,0.12);
+  }
+  .card-title .badge-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #a62639;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .card-body {
+    font-size: 12.5px;
+    color: #444;
+    line-height: 1.7;
+    flex: 1;
+    overflow: hidden;
+  }
+  .card-body b { color: #1a1a1a; font-weight: 600; }
+
+  /* ── 아이템 리스트 (Artifacts) ── */
+  .item-list { display: flex; flex-direction: column; gap: 0; flex: 1; overflow: hidden; }
+  .item {
+    font-size: 12.5px;
+    color: #555;
+    line-height: 1.55;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .item:last-child { border-bottom: none; padding-bottom: 0; }
+  .item b { color: #1a1a1a; font-weight: 600; min-width: fit-content; }
+
+  /* ── Pain point 리스트 ── */
+  .pain-list { display: flex; flex-direction: column; gap: 0; flex: 1; overflow: hidden; }
+  .pain {
+    font-size: 12.5px;
+    color: #555;
+    line-height: 1.6;
+    padding: 7px 0 7px 14px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    position: relative;
+  }
+  .pain:last-child { border-bottom: none; }
+  .pain::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 14px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #a62639;
+    opacity: 0.6;
+  }
+  .pain b { color: #1a1a1a; font-weight: 600; }
+
+  /* ── Reviews ── */
+  .review-list { display: flex; flex-direction: column; gap: 8px; flex: 1; overflow: hidden; }
+  .review-item {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.65;
+    font-style: italic;
+    padding: 10px 14px;
+    background: #fdf6f7;
+    border-left: 3px solid #a62639;
+    border-radius: 0 8px 8px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="slide">
+  <!-- 헤더 -->
+  <div class="header">
+    <div class="header-left">
+      <div class="action-title">임신 중 몸의 변화와 이상 신호를<br>확인하고 불안에 대응한다</div>
+      <div class="action-subtitle">Actor 0 · Action 1</div>
+    </div>
+    <div class="header-right">
+      LG전자 DX School<br>
+      4기 2반 Last Dance
+    </div>
+  </div>
+
+  <!-- 태그 바 -->
+  <div class="tags-bar">
+    <span class="tag">#배뭉침</span>
+    <span class="tag">#배아픔</span>
+    <span class="tag">#출혈</span>
+    <span class="tag">#착상혈</span>
+    <span class="tag">#감기약</span>
+    <span class="tag">#영양제</span>
+    <span class="tag">#허리통증</span>
+    <span class="tag">#임신초기</span>
+    <span class="tag">#증상확인</span>
+  </div>
+
+  <!-- 본문 그리드 -->
+  <div class="body-grid">
+
+    <!-- 1행 1열: Character 이미지 -->
+    <div class="img-cell">
+      <img src="src/actor0_action1_character.png" alt="Character">
+    </div>
+
+    <!-- 1행 2열: NEEDS -->
+    <div class="card accent">
+      <div class="card-title"><span class="badge-num">1</span> Needs</div>
+      <div class="pain-list">
+        <div class="pain">지금 이 증상이 <b>정상인지 아닌지</b> 빠르게 알고 싶다</div>
+        <div class="pain">작은 통증·출혈도 <b>임신과 연관된 건지</b> 즉시 확인하고 싶다</div>
+        <div class="pain">감기약·영양제 등 <b>임신 중 복용 가능 여부</b>를 신뢰할 수 있게 알고 싶다</div>
+        <div class="pain">불안을 줄여줄 <b>정확하고 빠른 정보</b>가 필요하다</div>
+      </div>
+    </div>
+
+    <!-- 1행 3열: ARTIFACTS -->
+    <div class="card">
+      <div class="card-title"><span class="badge-num">2</span> Artifacts</div>
+      <div class="item-list">
+        <div class="item"><b>맘카페·커뮤니티</b> — 증상 공유 및 경험담 수집</div>
+        <div class="item"><b>포털 검색</b> — "임신 중 ○○ 증상 정상인가요" 즉각 검색</div>
+        <div class="item"><b>산부인과</b> — 이상 신호 확인 시 직접 방문</div>
+        <div class="item"><b>임신 앱</b> — 주차별 증상 체크리스트 확인</div>
+      </div>
+    </div>
+
+    <!-- 2행 1열: LDA 이미지 -->
+    <div class="img-cell">
+      <img src="src/actor0_action1_LDA.png" alt="LDA">
+    </div>
+
+    <!-- 2행 2열: PAIN POINTS -->
+    <div class="card">
+      <div class="card-title"><span class="badge-num">3</span> Pain Points</div>
+      <div class="pain-list">
+        <div class="pain">검색 결과가 너무 많아 <b>어떤 정보가 맞는지</b> 판단하기 어렵다</div>
+        <div class="pain">비슷한 증상 글이 많아도 <b>내 상황과 정확히 같은 케이스</b>를 찾기 힘들다</div>
+        <div class="pain">병원에 가기엔 애매하고, <b>그냥 넘기자니 불안</b>한 상태가 반복된다</div>
+      </div>
+    </div>
+
+    <!-- 2행 3열: REVIEWS -->
+    <div class="card">
+      <div class="card-title"><span class="badge-num">4</span> Reviews</div>
+      <div class="review-list">
+        <div class="review-item">"임신 8주인데 갈색 출혈이 조금씩 나와요. 착상혈인지 이상인지 모르겠어서 밤새 검색만 했어요."</div>
+        <div class="review-item">"배가 뭉치는 느낌이 하루에 몇 번씩 오는데, 병원 갈 정도인지 아닌지 판단이 안 돼요."</div>
+        <div class="review-item">"감기 걸렸는데 약을 먹어도 되는 건지, 안 먹고 버텨야 하는 건지 너무 답답해요."</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
