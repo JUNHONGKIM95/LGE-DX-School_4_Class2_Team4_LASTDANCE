@@ -1,0 +1,320 @@
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+svg text { font-family: "Anthropic Sans", sans-serif; }
+.domain-btn { padding:8px 16px; border-radius:var(--border-radius-md); border:0.5px solid var(--color-border-tertiary); background:var(--color-background-primary); color:var(--color-text-primary); font-size:13px; cursor:pointer; transition:all .2s; font-family:"Anthropic Sans",sans-serif; }
+.domain-btn:hover { background:var(--color-background-secondary); }
+.domain-btn.active { border-color:var(--color-border-info); background:var(--color-background-info); color:var(--color-text-info); }
+.legend { display:flex; gap:16px; align-items:center; font-size:12px; color:var(--color-text-secondary); font-family:"Anthropic Sans",sans-serif; margin-top:8px; flex-wrap:wrap; }
+#erd-container { width:100%; overflow:auto; }
+</style>
+
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+  <button class="domain-btn active" onclick="showDomain('core')">핵심</button>
+  <button class="domain-btn" onclick="showDomain('diary')">임신일기</button>
+  <button class="domain-btn" onclick="showDomain('todo')">할일</button>
+  <button class="domain-btn" onclick="showDomain('mombti')">맘BTI</button>
+  <button class="domain-btn" onclick="showDomain('community')">커뮤니티</button>
+  <button class="domain-btn" onclick="showDomain('schedule')">일정/응원</button>
+  <button class="domain-btn" onclick="showDomain('appliance')">가전제어</button>
+  <button class="domain-btn" onclick="showDomain('ai')">AI</button>
+  <button class="domain-btn" onclick="showDomain('all')">전체보기</button>
+</div>
+
+<div class="legend">
+  <span style="display:flex;align-items:center;gap:4px"><svg width="20" height="14"><rect x="1" y="1" width="18" height="12" rx="2" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.8"/></svg> 엔티티</span>
+  <span style="display:flex;align-items:center;gap:4px"><svg width="20" height="14"><polygon points="10,1 19,7 10,13 1,7" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.8"/></svg> 관계</span>
+  <span style="display:flex;align-items:center;gap:4px"><svg width="20" height="14"><ellipse cx="10" cy="7" rx="9" ry="6" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.8"/></svg> 속성</span>
+  <span style="display:flex;align-items:center;gap:4px"><svg width="20" height="14"><ellipse cx="10" cy="7" rx="9" ry="6" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.8"/><line x1="2" y1="13" x2="18" y2="13" stroke="#3B6D11" stroke-width="0.8"/></svg> PK</span>
+  <span style="font-size:11px;color:var(--color-text-tertiary)">n, 1 = 카디널리티</span>
+</div>
+
+<div id="erd-container"></div>
+
+<script>
+const EW = 140, EH = 42;
+const ARX_BASE = 38, ARY = 14;
+const DW = 60, DH = 34;
+
+const domains = {
+core: {
+  entities: [
+    { id:"users", x:160, y:220, attrs:[
+      {n:"user_id",pk:1},{n:"email"},{n:"password"},{n:"username"},
+      {n:"baby_nickname"},{n:"role"},{n:"due_date"},{n:"current_week"}
+    ]},
+    { id:"family_groups", x:600, y:220, attrs:[
+      {n:"group_id",pk:1},{n:"group_name"},{n:"invite_code"},{n:"user_id(FK)"}
+    ]}
+  ],
+  relations:[
+    { name:"소속", from:"users", to:"family_groups", c1:"n", c2:"1" }
+  ],
+  color:"#E6F1FB", stroke:"#185FA5", w:900, h:480
+},
+diary: {
+  entities: [
+    { id:"users", x:60, y:200, attrs:[{n:"user_id",pk:1}], ref:1 },
+    { id:"family_groups", x:60, y:360, attrs:[{n:"group_id",pk:1}], ref:1 },
+    { id:"pregnancy_diaries", x:370, y:200, attrs:[
+      {n:"diary_id",pk:1},{n:"title"},{n:"content"},{n:"diary_date"},{n:"status"}
+    ]},
+    { id:"diary_images", x:700, y:200, attrs:[
+      {n:"diary_image_id",pk:1},{n:"file_path"},{n:"mime_type"},{n:"is_thumbnail"},{n:"sort_order"}
+    ]}
+  ],
+  relations:[
+    { name:"작성", from:"users", to:"pregnancy_diaries", c1:"1", c2:"n" },
+    { name:"소속", from:"family_groups", to:"pregnancy_diaries", c1:"1", c2:"n" },
+    { name:"첨부", from:"pregnancy_diaries", to:"diary_images", c1:"1", c2:"n" }
+  ],
+  color:"#FBEAF0", stroke:"#993556", w:950, h:520
+},
+todo: {
+  entities: [
+    { id:"users", x:60, y:200, attrs:[{n:"user_id",pk:1}], ref:1 },
+    { id:"family_groups", x:60, y:380, attrs:[{n:"group_id",pk:1}], ref:1 },
+    { id:"todos", x:650, y:100, attrs:[
+      {n:"todo_id",pk:1},{n:"target_week"},{n:"todo_name"},{n:"description"}
+    ]},
+    { id:"my_list", x:380, y:100, attrs:[
+      {n:"my_list_id",pk:1},{n:"title"},{n:"my_list_date"},{n:"check_yn"}
+    ]},
+    { id:"recommand_list", x:380, y:350, attrs:[
+      {n:"recommand_list_id",pk:1},{n:"current_week"},{n:"check_yn"}
+    ]}
+  ],
+  relations:[
+    { name:"생성", from:"users", to:"my_list", c1:"1", c2:"n" },
+    { name:"생성", from:"users", to:"recommand_list", c1:"1", c2:"n" },
+    { name:"참조", from:"recommand_list", to:"todos", c1:"n", c2:"1" }
+  ],
+  color:"#E1F5EE", stroke:"#0F6E56", w:900, h:540
+},
+mombti: {
+  entities: [
+    { id:"users", x:60, y:260, attrs:[{n:"user_id",pk:1}], ref:1 },
+    { id:"mombti_question", x:400, y:60, attrs:[
+      {n:"question_id",pk:1},{n:"question_text"},{n:"dimension"},{n:"display_order"}
+    ]},
+    { id:"mombti_choice", x:730, y:60, attrs:[
+      {n:"choice_id",pk:1},{n:"choice_text"},{n:"target_trait"},{n:"score_value"}
+    ]},
+    { id:"mombti_result_profile", x:730, y:340, attrs:[
+      {n:"result_type",pk:1},{n:"title"},{n:"summary"},{n:"image_url"}
+    ]},
+    { id:"mombti_test_attempt", x:320, y:340, attrs:[
+      {n:"attempt_id",pk:1},{n:"status"},{n:"score_p~m"}
+    ]},
+    { id:"mombti_answer", x:540, y:200, attrs:[
+      {n:"answer_id",pk:1},{n:"target_trait"},{n:"score_value"}
+    ]}
+  ],
+  relations:[
+    { name:"시도", from:"users", to:"mombti_test_attempt", c1:"1", c2:"n" },
+    { name:"결과", from:"mombti_test_attempt", to:"mombti_result_profile", c1:"n", c2:"1" },
+    { name:"포함", from:"mombti_test_attempt", to:"mombti_answer", c1:"1", c2:"n" },
+    { name:"출제", from:"mombti_question", to:"mombti_choice", c1:"1", c2:"n" }
+  ],
+  color:"#EEEDFE", stroke:"#534AB7", w:980, h:540
+},
+community: {
+  entities: [
+    { id:"users", x:60, y:200, attrs:[{n:"user_id",pk:1}], ref:1 },
+    { id:"boards", x:340, y:60, attrs:[
+      {n:"board_id",pk:1},{n:"board_code"},{n:"board_name"}
+    ]},
+    { id:"community_keywords", x:620, y:60, attrs:[
+      {n:"keyword_id",pk:1},{n:"keyword_code"},{n:"keyword_name"}
+    ]},
+    { id:"community_posts", x:440, y:260, attrs:[
+      {n:"post_id",pk:1},{n:"title"},{n:"content"},{n:"like_count"},{n:"is_anonymous"},{n:"status"}
+    ]},
+    { id:"community_comments", x:760, y:260, attrs:[
+      {n:"comment_id",pk:1},{n:"content"},{n:"status"}
+    ]},
+    { id:"post_likes", x:440, y:460, attrs:[
+      {n:"post_like_id",pk:1}
+    ]}
+  ],
+  relations:[
+    { name:"분류", from:"boards", to:"community_posts", c1:"1", c2:"n" },
+    { name:"태그", from:"community_keywords", to:"community_posts", c1:"1", c2:"n" },
+    { name:"작성", from:"users", to:"community_posts", c1:"1", c2:"n" },
+    { name:"댓글", from:"community_posts", to:"community_comments", c1:"1", c2:"n" },
+    { name:"좋아요", from:"community_posts", to:"post_likes", c1:"1", c2:"n" }
+  ],
+  color:"#FAECE7", stroke:"#993C1D", w:1000, h:580
+},
+schedule: {
+  entities: [
+    { id:"users", x:100, y:180, attrs:[{n:"user_id",pk:1}], ref:1 },
+    { id:"family_groups", x:100, y:380, attrs:[{n:"group_id",pk:1}], ref:1 },
+    { id:"schedules", x:500, y:120, attrs:[
+      {n:"schedule_id",pk:1},{n:"title"},{n:"memo"},{n:"schedule_type"},{n:"schedule_date"},{n:"time"}
+    ]},
+    { id:"cheer_messages", x:500, y:380, attrs:[
+      {n:"message_id",pk:1},{n:"content"},{n:"reaction_emoji"}
+    ]}
+  ],
+  relations:[
+    { name:"등록", from:"users", to:"schedules", c1:"1", c2:"n" },
+    { name:"소속", from:"family_groups", to:"schedules", c1:"1", c2:"n" },
+    { name:"전송", from:"users", to:"cheer_messages", c1:"1", c2:"n" },
+    { name:"소속", from:"family_groups", to:"cheer_messages", c1:"1", c2:"n" }
+  ],
+  color:"#FAEEDA", stroke:"#854F0B", w:900, h:560
+},
+appliance: {
+  entities: [
+    { id:"users", x:60, y:300, attrs:[{n:"user_id",pk:1}], ref:1 },
+    { id:"appliance_master", x:360, y:80, attrs:[
+      {n:"appliance_master_id",pk:1},{n:"appliance_code"},{n:"appliance_name"}
+    ]},
+    { id:"routine_master", x:700, y:80, attrs:[
+      {n:"routine_id",pk:1},{n:"routine_code"},{n:"pregnancy_stage"},{n:"routine_name"}
+    ]},
+    { id:"routine_action", x:540, y:300, attrs:[
+      {n:"routine_action_id",pk:1},{n:"sequence_no"},{n:"action_title"},{n:"target_power_state"}
+    ]},
+    { id:"user_appliance_control", x:260, y:460, attrs:[
+      {n:"control_id",pk:1},{n:"alert_sound_enabled"}
+    ]}
+  ],
+  relations:[
+    { name:"구성", from:"routine_master", to:"routine_action", c1:"1", c2:"n" },
+    { name:"대상", from:"appliance_master", to:"routine_action", c1:"1", c2:"n" },
+    { name:"제어", from:"users", to:"user_appliance_control", c1:"1", c2:"n" }
+  ],
+  color:"#F1EFE8", stroke:"#5F5E5A", w:960, h:600
+},
+ai: {
+  entities: [
+    { id:"users", x:140, y:160, attrs:[{n:"user_id",pk:1}], ref:1 },
+    { id:"ai_chat_logs", x:500, y:160, attrs:[
+      {n:"chat_id",pk:1},{n:"question"},{n:"ai_answer"}
+    ]}
+  ],
+  relations:[
+    { name:"대화", from:"users", to:"ai_chat_logs", c1:"1", c2:"n" }
+  ],
+  color:"#EAF3DE", stroke:"#3B6D11", w:780, h:380
+}
+};
+
+let currentDomain = 'core';
+
+function showDomain(d) {
+  currentDomain = d;
+  document.querySelectorAll('.domain-btn').forEach(b => b.classList.remove('active'));
+  if(event && event.target) event.target.classList.add('active');
+  render();
+}
+
+function entCenter(e) { return { x: e.x + EW/2, y: e.y + EH/2 }; }
+
+function attrPositions(ent) {
+  const attrs = ent.attrs || [];
+  const n = attrs.length;
+  if (n === 0) return [];
+  const cx = ent.x + EW/2;
+  const cy = ent.y + EH/2;
+  const positions = [];
+  const topCount = Math.ceil(n / 2);
+  const botCount = n - topCount;
+  const hSpacing = 82;
+
+  for (let i = 0; i < topCount; i++) {
+    const startX = cx - (topCount - 1) * hSpacing / 2;
+    positions.push({ ...attrs[i], ax: startX + i * hSpacing, ay: ent.y - 50 });
+  }
+  for (let i = 0; i < botCount; i++) {
+    const startX = cx - (botCount - 1) * hSpacing / 2;
+    positions.push({ ...attrs[topCount + i], ax: startX + i * hSpacing, ay: ent.y + EH + 50 });
+  }
+  return positions;
+}
+
+function renderDomain(dom, compact) {
+  const s = compact ? 0.5 : 1;
+  const ew = EW * s, eh = EH * s;
+  const dw = DW * s, dh = DH * s;
+  let lines = '';
+  let shapes = '';
+
+  const entMap = {};
+  dom.entities.forEach(e => { entMap[e.id] = e; });
+
+  dom.relations.forEach(rel => {
+    const fe = entMap[rel.from], te = entMap[rel.to];
+    if (!fe || !te) return;
+    const fc = { x: (fe.x + EW/2)*s, y: (fe.y + EH/2)*s };
+    const tc = { x: (te.x + EW/2)*s, y: (te.y + EH/2)*s };
+    const mx = (fc.x + tc.x) / 2, my = (fc.y + tc.y) / 2;
+
+    lines += `<line x1="${fc.x}" y1="${fc.y}" x2="${mx}" y2="${my}" stroke="${dom.stroke}" stroke-width="${compact?0.6:0.8}" opacity="0.5"/>`;
+    lines += `<line x1="${mx}" y1="${my}" x2="${tc.x}" y2="${tc.y}" stroke="${dom.stroke}" stroke-width="${compact?0.6:0.8}" opacity="0.5"/>`;
+
+    if (!compact) {
+      const cm1x = (fc.x+mx)/2, cm1y = (fc.y+my)/2;
+      const cm2x = (mx+tc.x)/2, cm2y = (my+tc.y)/2;
+      shapes += `<text x="${cm1x}" y="${cm1y-8}" text-anchor="middle" font-size="10" font-weight="500" fill="${dom.stroke}">${rel.c1}</text>`;
+      shapes += `<text x="${cm2x}" y="${cm2y-8}" text-anchor="middle" font-size="10" font-weight="500" fill="${dom.stroke}">${rel.c2}</text>`;
+    }
+
+    const pts = `${mx},${my-dh/2} ${mx+dw/2},${my} ${mx},${my+dh/2} ${mx-dw/2},${my}`;
+    shapes += `<polygon points="${pts}" fill="#FAEEDA" stroke="#854F0B" stroke-width="${compact?0.5:0.8}"/>`;
+    shapes += `<text x="${mx}" y="${my+1}" text-anchor="middle" dominant-baseline="central" font-size="${compact?7:10.5}" fill="#412402">${rel.name}</text>`;
+  });
+
+  dom.entities.forEach(ent => {
+    const ex = ent.x * s, ey = ent.y * s;
+    const fillC = ent.ref ? '#F1EFE8' : dom.color;
+    const strokeC = ent.ref ? '#5F5E5A' : dom.stroke;
+
+    if (!compact) {
+      const aps = attrPositions(ent);
+      aps.forEach(a => {
+        const arx = Math.max(a.n.length * 3.8 + 12, 34);
+        lines += `<line x1="${a.ax}" y1="${a.ay}" x2="${ent.x + EW/2}" y2="${a.ay < ent.y ? ent.y : ent.y + EH}" stroke="#3B6D11" stroke-width="0.5" opacity="0.4"/>`;
+        shapes += `<ellipse cx="${a.ax}" cy="${a.ay}" rx="${arx}" ry="${ARY}" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.6"/>`;
+        if (a.pk) shapes += `<line x1="${a.ax - arx + 5}" y1="${a.ay + ARY - 2}" x2="${a.ax + arx - 5}" y2="${a.ay + ARY - 2}" stroke="#3B6D11" stroke-width="0.7"/>`;
+        shapes += `<text x="${a.ax}" y="${a.ay + 1}" text-anchor="middle" dominant-baseline="central" font-size="9.5" fill="#173404">${a.n}</text>`;
+      });
+    }
+
+    shapes += `<rect x="${ex}" y="${ey}" width="${ew}" height="${eh}" rx="${compact?3:5}" fill="${fillC}" stroke="${strokeC}" stroke-width="${compact?0.8:1.2}"/>`;
+    shapes += `<text x="${ex+ew/2}" y="${ey+eh/2+1}" text-anchor="middle" dominant-baseline="central" font-size="${compact?8:12}" font-weight="500" fill="${strokeC}">${ent.id}</text>`;
+  });
+
+  return lines + shapes;
+}
+
+function render() {
+  const container = document.getElementById('erd-container');
+  if (currentDomain === 'all') { renderAll(container); return; }
+  const dom = domains[currentDomain];
+  let svg = `<svg width="100%" viewBox="0 0 ${dom.w} ${dom.h}" xmlns="http://www.w3.org/2000/svg" style="font-family:'Anthropic Sans',sans-serif">`;
+  svg += renderDomain(dom, false);
+  svg += `</svg>`;
+  container.innerHTML = svg;
+}
+
+function renderAll(container) {
+  const keys = Object.keys(domains);
+  let html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr));gap:12px;">';
+  keys.forEach((k,i) => {
+    const dom = domains[k];
+    const titles = {core:"핵심",diary:"임신일기",todo:"할일",mombti:"맘BTI",community:"커뮤니티",schedule:"일정/응원",appliance:"가전제어",ai:"AI"};
+    let svg = `<svg width="100%" viewBox="0 0 ${dom.w*0.5} ${dom.h*0.5}" xmlns="http://www.w3.org/2000/svg" style="font-family:'Anthropic Sans',sans-serif">`;
+    svg += `<text x="8" y="14" font-size="11" font-weight="500" fill="${dom.stroke}">${titles[k]}</text>`;
+    svg += renderDomain(dom, true);
+    svg += `</svg>`;
+    html += `<div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:8px;cursor:pointer" onclick="document.querySelectorAll('.domain-btn')[${i}].click()">${svg}</div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+render();
+</script>
