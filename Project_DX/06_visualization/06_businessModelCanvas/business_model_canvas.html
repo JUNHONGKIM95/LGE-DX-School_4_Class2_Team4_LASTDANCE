@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1460, initial-scale=1.0">
+    <title>LG ThinQ Parenting Mode — Business Model Canvas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #f5f0ed;
+            color: #2d2d2d;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .canvas-wrapper {
+            width: 1400px;
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #8B1A2B 0%, #A91D3A 50%, #C62828 100%);
+            color: #fff;
+            padding: 32px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header-left p {
+            font-size: 14px;
+            font-weight: 300;
+            margin-top: 6px;
+            opacity: 0.85;
+        }
+
+        .header-right {
+            text-align: right;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .header-right .org {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Canvas Grid */
+        .canvas-body {
+            padding: 28px 32px 32px;
+        }
+
+        .canvas-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 0;
+            border: 2px solid #8B1A2B;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Cell base */
+        .cell {
+            border-right: 1.5px solid #e0d0d0;
+            border-bottom: 1.5px solid #e0d0d0;
+            padding: 18px 16px;
+            min-height: 260px;
+            position: relative;
+        }
+
+
+        .cell-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #8B1A2B;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            letter-spacing: 0.3px;
+        }
+
+        .cell-label .icon {
+            font-size: 14px;
+        }
+
+        .cell-content {
+            font-size: 12.5px;
+            line-height: 1.75;
+            color: #3a3a3a;
+        }
+
+        .cell-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cell-content ul li {
+            position: relative;
+            padding-left: 14px;
+            margin-bottom: 7px;
+        }
+
+        .cell-content ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 5px;
+            height: 5px;
+            background: #A91D3A;
+            border-radius: 50%;
+        }
+
+        .cell-content .sub-title {
+            font-weight: 700;
+            color: #8B1A2B;
+            font-size: 12px;
+            margin-top: 10px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .cell-content .sub-title:first-child {
+            margin-top: 0;
+        }
+
+        .cell-content .highlight {
+            color: #A91D3A;
+            font-weight: 600;
+        }
+
+        .cell-content .tag {
+            display: inline-block;
+            background: #fce4ec;
+            color: #8B1A2B;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin: 2px 2px;
+        }
+
+        /* Layout positions */
+        /* Row 1: KP | KA | VP | CR | CS */
+        .cell-kp {
+            grid-column: 1;
+            grid-row: 1 / 3;
+        }
+
+        .cell-ka {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .cell-vp {
+            grid-column: 3;
+            grid-row: 1 / 3;
+        }
+
+        .cell-cr {
+            grid-column: 4;
+            grid-row: 1;
+            border-right: 1.5px solid #e0d0d0;
+        }
+
+        .cell-cs {
+            grid-column: 5;
+            grid-row: 1 / 3;
+            border-right: none;
+        }
+
+        .cell-kr {
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        .cell-ch {
+            grid-column: 4;
+            grid-row: 2;
+            border-right: 1.5px solid #e0d0d0;
+        }
+
+        /* Bottom row */
+        .bottom-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: none;
+        }
+
+        .cell-cost {
+            border-right: 1.5px solid #e0d0d0;
+            border-bottom: none;
+        }
+
+        .cell-rev {
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .cell-bottom {
+            padding: 18px 16px;
+            min-height: 140px;
+        }
+
+        /* VP special styling */
+        .cell-vp {
+            background: linear-gradient(180deg, #fff5f5 0%, #fff 100%);
+        }
+
+        .cell-vp .cell-label {
+            background: linear-gradient(135deg, #8B1A2B, #C62828);
+        }
+
+        .vp-main-msg {
+            background: #8B1A2B;
+            color: #fff;
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.7;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .vp-main-msg strong {
+            font-weight: 800;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 4px;
+            white-space: nowrap;
+        }
+
+        .vp-features {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .vp-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: #fef8f8;
+            border: 1px solid #f3d5d5;
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        .vp-feature .vp-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .vp-feature .vp-text {
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .vp-feature .vp-text strong {
+            font-weight: 700;
+            color: #8B1A2B;
+            display: block;
+            font-size: 12.5px;
+        }
+
+        /* CS special */
+        .cs-persona {
+            background: #fef8f8;
+            border: 1px solid #f3d5d5;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .cs-persona .persona-icon {
+            font-size: 36px;
+            margin-bottom: 6px;
+        }
+
+        .cs-persona .persona-name {
+            font-weight: 800;
+            font-size: 14px;
+            color: #8B1A2B;
+        }
+
+        .cs-persona .persona-desc {
+            font-size: 11.5px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .cs-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .cs-stat-item {
+            background: #f9f0f0;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .cs-stat-item .stat-val {
+            font-weight: 800;
+            font-size: 16px;
+            color: #8B1A2B;
+        }
+
+        .cs-stat-item .stat-label {
+            font-size: 10px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        /* Revenue special */
+        .rev-items {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .rev-item {
+            flex: 1;
+            min-width: 180px;
+            background: #fef8f8;
+            border: 1px solid #f3d5d5;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .rev-item .rev-title {
+            font-weight: 700;
+            font-size: 12.5px;
+            color: #8B1A2B;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rev-item .rev-desc {
+            font-size: 11.5px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 16px;
+            font-size: 11px;
+            color: #999;
+            border-top: 1px solid #f0e8e8;
+        }
+
+        /* FUN badge */
+        .fun-badges {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .fun-badge {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .fun-badge-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 900;
+            flex-shrink: 0;
+            color: #fff;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .fun-badge-icon.f { background: #A91D3A; }
+        .fun-badge-icon.u { background: #C67A00; }
+        .fun-badge-icon.n { background: #7B1FA2; }
+
+        .fun-badge-text {
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .fun-badge-text strong {
+            font-size: 12px;
+            font-weight: 700;
+            color: #8B1A2B;
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas-wrapper">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>LG ThinQ Parenting Mode — Business Model Canvas</h1>
+                <p>공간 제어를 넘어 첫 만남을 준비하는 여정까지, ThinQ로 연결된 임신·출산 라이프</p>
+            </div>
+            <div class="header-right">
+                <div class="org">LG전자 DX School</div>
+                <div>4기 2반 4팀 Last Dance</div>
+            </div>
+        </div>
+
+        <!-- F.U.N -->
+        <div style="padding: 20px 32px 0;">
+            <div class="fun-badges">
+                <div class="fun-badge">
+                    <div class="fun-badge-icon f">F</div>
+                    <div class="fun-badge-text">
+                        <strong>First</strong><br>
+                        파편화된 피로를 지우는 '최초의' 원스톱 케어 — ThinQ 앱 하나로 임신 정보 + 가전 제어 + 커뮤니티를 완벽하게 통합
+                    </div>
+                </div>
+                <div class="fun-badge">
+                    <div class="fun-badge-icon u">U</div>
+                    <div class="fun-badge-text">
+                        <strong>Unique</strong><br>
+                        정보와 공간이 완벽히 동기화된 융합 서비스 — 임신 주차와 컨디션에 맞춰 가전이 자동으로 최적 환경을 조성
+                    </div>
+                </div>
+                <div class="fun-badge">
+                    <div class="fun-badge-icon n">N</div>
+                    <div class="fun-badge-text">
+                        <strong>New</strong><br>
+                        280일의 감정까지 어루만지는 '세상에 없던' 공감 플랫폼 — MomBTI로 엄마들을 연결하고 정서적 공감대를 형성
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Canvas Body -->
+        <div class="canvas-body">
+            <div class="canvas-grid">
+                <!-- Key Partners -->
+                <div class="cell cell-kp">
+                    <div class="cell-label"><span class="icon">🤝</span> 핵심 파트너 (KP)</div>
+                    <div class="cell-content">
+                        <div class="sub-title">🏥 의료·전문기관</div>
+                        <ul>
+                            <li>산부인과·소아과 병원 네트워크</li>
+                            <li>산후조리원 제휴 파트너</li>
+                            <li>임산부 건강 데이터 자문 의료진</li>
+                        </ul>
+                        <div class="sub-title">📱 플랫폼·기술</div>
+                        <ul>
+                            <li>Google Cloud Platform (AI 챗봇)</li>
+                            <li>Gemini API (RAG 기반 가이드)</li>
+                            <li>Supabase (데이터 인프라)</li>
+                        </ul>
+                        <div class="sub-title">📦 콘텐츠·커머스</div>
+                        <ul>
+                            <li>육아용품 브랜드 (교차판매)</li>
+                            <li>프리미엄 태교 콘텐츠 제공사</li>
+                            <li>정부 출산지원 정책 연계</li>
+                        </ul>
+                        <div class="sub-title">🏭 내부 협력</div>
+                        <ul>
+                            <li>LG전자 H&A (가전) 사업본부</li>
+                            <li>LG ThinQ 플랫폼 개발팀</li>
+                            <li>Athom (글로벌 IoT 연동)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Key Activities -->
+                <div class="cell cell-ka">
+                    <div class="cell-label"><span class="icon">⚙️</span> 핵심 활동 (KA)</div>
+                    <div class="cell-content">
+                        <div class="sub-title">🔄 서비스 운영</div>
+                        <ul>
+                            <li>임신 주차별 <span class="highlight">맞춤 콘텐츠</span> 큐레이션 및 To-do 추천</li>
+                            <li>가전 <span class="highlight">자동 루틴</span> 설계 (초기·중기·후기 시기별)</li>
+                            <li>MomBTI 기반 커뮤니티 매칭 알고리즘 운영</li>
+                        </ul>
+                        <div class="sub-title">🤖 AI·데이터</div>
+                        <ul>
+                            <li>RAG 기반 임산부 가이드 AI 챗봇 고도화</li>
+                            <li>사용자 라이프로그 수집·분석 (공감지능 데이터)</li>
+                        </ul>
+                        <div class="sub-title">📈 성장 전략</div>
+                        <ul>
+                            <li>맘카페·SNS 바이럴 마케팅</li>
+                            <li>산부인과 제휴 온보딩 프로그램</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Value Propositions -->
+                <div class="cell cell-vp">
+                    <div class="cell-label"><span class="icon">💎</span> 가치 제안 (VP)</div>
+                    <div class="cell-content">
+                        <div class="vp-main-msg">
+                            <strong>"수많은 앱을 오가던 피로를 지우고,<br>예비맘의 일상과 공간을 하나로 잇는<br>가장 완벽한 280일을 선사합니다"</strong>
+                        </div>
+                        <div class="vp-features">
+                            <div class="vp-feature">
+                                <span class="vp-icon">📋</span>
+                                <div class="vp-text">
+                                    <strong>주차별 초개인화 가이드</strong>
+                                    병원 일정, 검사 체크, 영양 관리, 준비물, 주의 음식 등 맞춤 추천
+                                </div>
+                            </div>
+                            <div class="vp-feature">
+                                <span class="vp-icon">🏠</span>
+                                <div class="vp-text">
+                                    <strong>가전 자동 환경 제어</strong>
+                                    '올 무음' 수면 루틴, '노터치' 세탁→건조, '먼지 철벽 방어' 공기정화
+                                </div>
+                            </div>
+                            <div class="vp-feature">
+                                <span class="vp-icon">🧪</span>
+                                <div class="vp-text">
+                                    <strong>MomBTI 공감 커뮤니티</strong>
+                                    성향별 맞춤 필터링으로 유사 상황 엄마들과 깊은 정서적 연결
+                                </div>
+                            </div>
+                            <div class="vp-feature">
+                                <span class="vp-icon">🤖</span>
+                                <div class="vp-text">
+                                    <strong>AI 챗봇 즉시 상담</strong>
+                                    증상별·주차별 맞춤 질의응답으로 불안 해소
+                                </div>
+                            </div>
+                            <div class="vp-feature">
+                                <span class="vp-icon">👨‍👩‍👧</span>
+                                <div class="vp-text">
+                                    <strong>가족 공유 & 감성 기록</strong>
+                                    응원 메시지, 임신 일기, 캘린더 공유로 함께하는 280일
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Relationships -->
+                <div class="cell cell-cr">
+                    <div class="cell-label"><span class="icon">💕</span> 고객 관계 (CR)</div>
+                    <div class="cell-content">
+                        <div class="sub-title">🫂 정서적 유대</div>
+                        <ul>
+                            <li>MomBTI 성향 매칭으로 <span class="highlight">깊은 공감대</span> 형성</li>
+                            <li>가족 간 응원메시지·일기 공유</li>
+                            <li>D-Day 카운트다운으로 감성 연결</li>
+                        </ul>
+                        <div class="sub-title">🛡️ 신뢰 기반 케어</div>
+                        <ul>
+                            <li>AI 챗봇 + RAG 기반 <span class="highlight">검증된 정보</span> 제공</li>
+                            <li>주차별 자동 To-do로 누락 방지</li>
+                        </ul>
+                        <div class="sub-title">🔁 지속적 관계</div>
+                        <ul>
+                            <li>임신→출산→육아로 이어지는 <span class="highlight">동반자적 관계</span></li>
+                            <li>생태계 Lock-in 통한 장기 충성 고객 확보</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Customer Segments -->
+                <div class="cell cell-cs">
+                    <div class="cell-label"><span class="icon">👥</span> 고객 세그먼트 (CS)</div>
+                    <div class="cell-content">
+                        <div class="cs-persona">
+                            <div class="persona-icon">🤰</div>
+                            <div class="persona-name">김영희 (33세)</div>
+                            <div class="persona-desc">출산 불안을 정보로 다스리는 예비맘</div>
+                            <div style="margin-top: 8px;">
+                                <span class="tag">#예비엄마</span>
+                                <span class="tag">#첫임신</span>
+                                <span class="tag">#정보탐색형</span>
+                                <span class="tag">#불안관리</span>
+                            </div>
+                        </div>
+                        <div style="font-size: 10.5px; color: #888; margin-bottom: 4px;">ThinQ 기존 사용자 중 비율</div>
+                        <div class="cs-stats">
+                            <div class="cs-stat-item">
+                                <div class="stat-val">82.9%</div>
+                                <div class="stat-label">기혼</div>
+                            </div>
+                            <div class="cs-stat-item">
+                                <div class="stat-val">66.9%</div>
+                                <div class="stat-label">여성</div>
+                            </div>
+                            <div class="cs-stat-item">
+                                <div class="stat-val">70.1%</div>
+                                <div class="stat-label">30~40대</div>
+                            </div>
+                            <div class="cs-stat-item">
+                                <div class="stat-val">VIB</div>
+                                <div class="stat-label">텐포켓 트렌드</div>
+                            </div>
+                        </div>
+                        <div class="sub-title" style="margin-top: 12px;">📌 핵심 니즈</div>
+                        <ul>
+                            <li>주차별 필수 정보를 <span class="highlight">한곳에서</span> 확인</li>
+                            <li>비슷한 상황 엄마들과 <span class="highlight">감정적 교류</span></li>
+                            <li>편안한 주거 환경 자동 관리</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Key Resources -->
+                <div class="cell cell-kr">
+                    <div class="cell-label"><span class="icon">🏗️</span> 핵심 자원 (KR)</div>
+                    <div class="cell-content">
+                        <div class="sub-title">🔌 하드웨어 생태계</div>
+                        <ul>
+                            <li>LG 스마트 가전 라인업 (세탁기, 건조기, 공기청정기, 로봇청소기)</li>
+                            <li>UP가전 2.0 초개인화 플랫폼</li>
+                        </ul>
+                        <div class="sub-title">💻 소프트웨어·데이터</div>
+                        <ul>
+                            <li>ThinQ 앱 플랫폼 인프라</li>
+                            <li>58,222건 고객경험 빅데이터</li>
+                            <li>공감지능(AI Brain) 엔진</li>
+                        </ul>
+                        <div class="sub-title">👩‍💼 인적 자원</div>
+                        <ul>
+                            <li>임산부 의료 자문단</li>
+                            <li>UX/AI 개발 전문 인력</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Channels -->
+                <div class="cell cell-ch">
+                    <div class="cell-label"><span class="icon">📢</span> 채널 (CH)</div>
+                    <div class="cell-content">
+                        <div class="sub-title">📱 주요 접점</div>
+                        <ul>
+                            <li><span class="highlight">ThinQ 앱</span> 내 Parenting Mode 탭</li>
+                            <li>LG전자 공식 홈페이지·쇼핑몰</li>
+                            <li>가전 제품 구매 시 온보딩 안내</li>
+                        </ul>
+                        <div class="sub-title">🌐 유입 채널</div>
+                        <ul>
+                            <li>맘카페 바이럴 (레몬테라스, 맘스홀릭)</li>
+                            <li>산부인과·산후조리원 제휴</li>
+                            <li>SNS·인플루언서 마케팅</li>
+                            <li>정부 출산지원 제도 연계 홍보</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Row: Cost & Revenue -->
+            <div class="bottom-row" style="border: 2px solid #8B1A2B; border-top: none; border-radius: 0 0 12px 12px; overflow: hidden;">
+                <!-- Cost Structure -->
+                <div class="cell cell-bottom cell-cost">
+                    <div class="cell-label"><span class="icon">💰</span> 비용 구조 (C$)</div>
+                    <div class="cell-content" style="display: flex; gap: 16px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <div class="sub-title">🔧 개발·운영비</div>
+                            <ul>
+                                <li>React + Spring Boot 앱 개발·유지보수</li>
+                                <li>Supabase(PostgreSQL) 인프라 비용</li>
+                                <li>Google Cloud / Gemini API 사용료</li>
+                            </ul>
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <div class="sub-title">📝 콘텐츠·마케팅</div>
+                            <ul>
+                                <li>임산부 가이드 콘텐츠 제작·검수</li>
+                                <li>MomBTI 설문 설계·프로필 제작</li>
+                                <li>맘카페·SNS 마케팅 비용</li>
+                                <li>산부인과·조리원 제휴 비용</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Revenue Streams -->
+                <div class="cell cell-bottom cell-rev">
+                    <div class="cell-label"><span class="icon">💵</span> 수익 흐름 (R$)</div>
+                    <div class="cell-content">
+                        <div class="rev-items">
+                            <div class="rev-item">
+                                <div class="rev-title">🔄 가전 교차판매 (Cross-selling)</div>
+                                <div class="rev-desc">임신 시기에 프리미엄 가전 교체 수요 흡수<br>→ 융합 가구 전환 시 매출 <strong>2.5배</strong> 증가</div>
+                            </div>
+                            <div class="rev-item">
+                                <div class="rev-title">📦 HaaS 구독 서비스</div>
+                                <div class="rev-desc">소모품 자동 배송, 에너지 최적화 구독<br>→ 기기당 <strong>$180~280</strong> 추가 LTV 창출</div>
+                            </div>
+                            <div class="rev-item">
+                                <div class="rev-title">🔒 생태계 Lock-in 효과</div>
+                                <div class="rev-desc">교체 주기 9년→14년, 이탈률 35% 감소<br>→ NPS 28→<strong>45+</strong> 장기 충성 고객 확보</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            &copy; LG Electronics · ThinQ Parenting Mode Business Model Canvas · Confidential
+        </div>
+    </div>
+</body>
+</html>
