@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920">
+    <title>LG ThinQ Parenting Mode - 서비스 정의서</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #f5f0eb;
+            color: #2d2d2d;
+        }
+
+        .page {
+            width: 1920px;
+            height: 1080px;
+            margin: 0 auto;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(135deg, #a8174a 0%, #c4245e 40%, #e8527a 100%);
+            padding: 18px 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header h1 small {
+            display: block;
+            font-size: 16px;
+            font-weight: 400;
+            opacity: 0.85;
+            margin-top: 3px;
+        }
+
+        .header-right {
+            text-align: right;
+            color: rgba(255,255,255,0.9);
+            font-size: 16px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* ── Top Row: Image + Concept Text + F·U·N ── */
+        .top-row {
+            display: flex;
+            align-items: stretch;
+            flex-shrink: 0;
+            border-bottom: 2px solid #f0e0e4;
+            height: 240px;
+        }
+
+        .top-image {
+            flex-shrink: 0;
+            background: linear-gradient(160deg, #fef5f7 0%, #f8e8ec 100%);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            border-right: 2px solid #f0e0e4;
+        }
+
+        .top-image img {
+            height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        /* F·U·N Cards */
+        .top-fun {
+            flex: 1;
+            background: linear-gradient(160deg, #fef5f7 0%, #f8e8ec 100%);
+            padding: 16px 28px;
+            display: flex;
+            gap: 16px;
+            border-left: 2px solid #f0e0e4;
+        }
+
+        .fun-card {
+            flex: 1;
+            background: #fff;
+            border: 1px solid #f0e0e4;
+            border-radius: 12px;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fun-card .fun-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .fun-card .fun-badge .fun-emoji {
+            font-size: 20px;
+        }
+
+        .fun-card .fun-badge .fun-letter {
+            background: linear-gradient(135deg, #a8174a, #d44a6a);
+            color: #fff;
+            padding: 4px 14px;
+            border-radius: 8px;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .fun-card .fun-badge .fun-label {
+            color: #a8174a;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .fun-card .fun-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .fun-card .fun-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        /* ── Main Grid ── */
+        .main-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 440px 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            min-height: 0;
+        }
+
+        /* ── Section Common ── */
+        .section {
+            padding: 22px 28px;
+            border-right: 1px solid #f0e8e8;
+            border-bottom: 1px solid #f0e8e8;
+        }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #a8174a, #d44a6a);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+
+        .section-tag .num {
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .section h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #a8174a;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .section p, .section li {
+            font-size: 14.5px;
+            color: #555;
+            line-height: 1.65;
+        }
+
+        .section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .section ul li {
+            position: relative;
+            padding-left: 16px;
+            margin-bottom: 5px;
+        }
+
+        .section ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 9px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #d44a6a;
+        }
+
+        /* ── 1. Target ── */
+        .target-section {
+            grid-row: 1 / 3;
+            background: linear-gradient(180deg, #fdf7f8 0%, #fff 100%);
+            border-right: 2px solid #f0e0e4;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .target-card {
+            background: #fff;
+            border: 1px solid #f0e0e4;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+        }
+
+        .target-card .label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #a8174a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .target-card p {
+            font-size: 14.5px;
+            color: #555;
+            line-height: 1.65;
+        }
+
+        .painpoint-box {
+            background: linear-gradient(135deg, #a8174a 0%, #c4245e 100%);
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: #fff;
+            flex: 1;
+        }
+
+        .painpoint-box .label {
+            font-size: 12px;
+            font-weight: 700;
+            opacity: 0.8;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .painpoint-box p {
+            font-size: 14.5px;
+            color: rgba(255,255,255,0.95);
+            line-height: 1.65;
+        }
+
+        .painpoint-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 28px;
+            margin-top: 16px;
+            flex: 1;
+        }
+
+        .painpoint-icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .painpoint-icon-item svg {
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        .painpoint-icon-item span {
+            font-size: 11px;
+            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* ── 2. Concept ── */
+        .concept-section {
+            grid-column: 2 / 4;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 6px;
+        }
+
+        .concept-card {
+            background: #fdf7f8;
+            border-radius: 12px;
+            padding: 16px 20px;
+            border: 1px solid #f5e8ec;
+        }
+
+        .concept-card .card-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #a8174a;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .concept-card ul li {
+            font-size: 13.5px;
+            margin-bottom: 5px;
+            line-height: 1.6;
+        }
+
+        .concept-card .highlight {
+            font-weight: 600;
+            color: #a8174a;
+        }
+
+        /* ── 3. Touch Point ── */
+        .touchpoint-section {
+            grid-column: 2;
+        }
+
+        .tp-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tp-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 10px 14px;
+            background: #fdf7f8;
+            border-radius: 10px;
+            border-left: 4px solid #d44a6a;
+        }
+
+        .tp-item .tp-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #a8174a;
+            white-space: nowrap;
+            min-width: 84px;
+        }
+
+        .tp-item .tp-desc {
+            font-size: 13.5px;
+            color: #666;
+            line-height: 1.55;
+        }
+
+        /* ── 4. Key Value ── */
+        .value-section {
+            grid-column: 3;
+            grid-row: 2;
+        }
+
+        .value-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .value-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .value-num {
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(135deg, #a8174a, #d44a6a);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .value-text .vtitle {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .value-text .vdesc {
+            font-size: 13px;
+            color: #777;
+            line-height: 1.55;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            background: #2d1520;
+            padding: 6px 56px;
+            text-align: center;
+            font-size: 10px;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 1px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+
+        <!-- Header -->
+        <div class="header">
+            <h1>LG ThinQ Parenting Mode &mdash; 서비스 정의서
+                <small>공간 제어를 넘어 첫 만남을 준비하는 여정까지, ThinQ로 연결된 임신·출산 라이프</small>
+            </h1>
+            <div class="header-right">
+                LG전자 DX School<br>4기 2반 4팀 Last Dance
+            </div>
+        </div>
+
+        <!-- Top Row: Image + F·U·N -->
+        <div class="top-row">
+            <div class="top-image">
+                <img src="src/concept_img.png" alt="LG ThinQ Parenting Mode 서비스 컨셉 이미지">
+            </div>
+            <div class="top-fun">
+                <div class="fun-card">
+                    <div class="fun-badge">
+                        <span class="fun-emoji">🥇</span>
+                        <span class="fun-letter">F</span>
+                        <span class="fun-label">First</span>
+                    </div>
+                    <div class="fun-title">파편화된 피로를 지우는 '최고의' 원스톱 케어</div>
+                    <div class="fun-desc">수많은 임신/육아 앱과 가전 리모컨 앱을 오가야 했던 예비맘의 피로감을 없애고, <strong>ThinQ 앱 하나로 완벽하게 해결</strong>하는 최고 수준의 편의성을 제공합니다.</div>
+                </div>
+                <div class="fun-card">
+                    <div class="fun-badge">
+                        <span class="fun-emoji">✨</span>
+                        <span class="fun-letter">U</span>
+                        <span class="fun-label">Unique</span>
+                    </div>
+                    <div class="fun-title">정보와 공간이 완벽히 동기화된 융합 서비스</div>
+                    <div class="fun-desc">산모의 임신 주차와 컨디션에 맞춰 에어컨, 공기청정기 등 <strong>LG 가전이 알아서 최적의 물리적 환경을 세팅</strong>해 주는 독보적인 경험을 선사합니다.</div>
+                </div>
+                <div class="fun-card">
+                    <div class="fun-badge">
+                        <span class="fun-emoji">💡</span>
+                        <span class="fun-letter">N</span>
+                        <span class="fun-label">New</span>
+                    </div>
+                    <div class="fun-title">280일의 감정까지 어루만지는 '세상에 없던' 공감 플랫폼</div>
+                    <div class="fun-desc">MomBTI로 산모의 성향을 파악하고, 비슷한 상황의 엄마들과 연결해 <strong>깊은 정서적 공감대를 형성</strong>하는 세상에 없던 다정한 라이프스타일 메이트입니다.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="main-grid">
+
+            <!-- 1. Target -->
+            <div class="section target-section">
+                <div class="section-tag"><span class="num">1</span> TARGET</div>
+                <h2>타깃 고객 및 페인 포인트</h2>
+
+                <div class="target-card">
+                    <div class="label">핵심 타깃</div>
+                    <p>임신 초기부터 출산 전까지의 <strong>임산부</strong><br>(특히 초산모 및 정보 탐색 부담이 큰 예비 부모)</p>
+                </div>
+
+                <div class="target-card">
+                    <div class="label">고객 Needs</div>
+                    <p>임신 주차별 필수 정보를 <strong>한곳에서 정확히</strong> 얻고, 비슷한 성향의 엄마들과 <strong>감정적으로 교류</strong>하며, 신체적 불편함 없이 <strong>편안한 주거 환경</strong>을 제공받고 싶어 함</p>
+                </div>
+
+                <div class="painpoint-box">
+                    <div class="label">PAIN POINT</div>
+                    <p>맘카페, 검색, 병원 자료 등 <strong>정보의 파편화</strong>로 신뢰도를 직접 판단해야 하는 피로감이 큼. 감정 케어, 일정 관리, 실내 환경(가전) 제어를 <strong>통합 관리해 주는 솔루션이 부재</strong></p>
+                    <div class="painpoint-icons">
+                        <!-- 파편화된 정보 -->
+                        <div class="painpoint-icon-item">
+                            <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+                                <defs>
+                                    <linearGradient id="g1" x1="0" y1="0" x2="64" y2="64">
+                                        <stop offset="0%" stop-color="#ffb3c6"/>
+                                        <stop offset="100%" stop-color="#ff7ea0"/>
+                                    </linearGradient>
+                                </defs>
+                                <rect x="6" y="10" width="24" height="30" rx="4" fill="url(#g1)" opacity="0.9"/>
+                                <rect x="34" y="6" width="24" height="30" rx="4" fill="url(#g1)" opacity="0.6" transform="rotate(8 46 21)"/>
+                                <rect x="20" y="28" width="24" height="30" rx="4" fill="url(#g1)" opacity="0.45" transform="rotate(-5 32 43)"/>
+                                <circle cx="18" cy="22" r="3" fill="#fff" opacity="0.8"/>
+                                <line x1="14" y1="30" x2="26" y2="30" stroke="#fff" stroke-width="2" opacity="0.6" stroke-linecap="round"/>
+                                <line x1="14" y1="34" x2="22" y2="34" stroke="#fff" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
+                            </svg>
+                            <span>정보 파편화</span>
+                        </div>
+                        <!-- 감정 케어 부재 -->
+                        <div class="painpoint-icon-item">
+                            <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+                                <defs>
+                                    <linearGradient id="g2" x1="0" y1="0" x2="64" y2="64">
+                                        <stop offset="0%" stop-color="#ffb3c6"/>
+                                        <stop offset="100%" stop-color="#ff7ea0"/>
+                                    </linearGradient>
+                                </defs>
+                                <path d="M32 56 C32 56 8 40 8 24 C8 14 16 8 24 8 C28 8 31 10 32 13 C33 10 36 8 40 8 C48 8 56 14 56 24 C56 40 32 56 32 56Z" fill="url(#g2)" opacity="0.85"/>
+                                <line x1="20" y1="20" x2="44" y2="44" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+                                <line x1="44" y1="20" x2="20" y2="44" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+                            </svg>
+                            <span>감정 케어 부재</span>
+                        </div>
+                        <!-- 가전 통합 관리 부재 -->
+                        <div class="painpoint-icon-item">
+                            <svg width="56" height="56" viewBox="0 0 64 64" fill="none">
+                                <defs>
+                                    <linearGradient id="g3" x1="0" y1="0" x2="64" y2="64">
+                                        <stop offset="0%" stop-color="#ffb3c6"/>
+                                        <stop offset="100%" stop-color="#ff7ea0"/>
+                                    </linearGradient>
+                                </defs>
+                                <rect x="8" y="12" width="20" height="40" rx="4" fill="url(#g3)" opacity="0.85"/>
+                                <rect x="14" y="18" width="8" height="14" rx="2" fill="#fff" opacity="0.5"/>
+                                <rect x="36" y="8" width="22" height="28" rx="4" fill="url(#g3)" opacity="0.6"/>
+                                <rect x="42" y="14" width="10" height="6" rx="1" fill="#fff" opacity="0.4"/>
+                                <circle cx="48" cy="48" r="12" fill="url(#g3)" opacity="0.5"/>
+                                <line x1="42" y1="48" x2="54" y2="48" stroke="#fff" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+                                <path d="M22 38 L36 32" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.4"/>
+                                <path d="M28 50 L42 44" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.4"/>
+                            </svg>
+                            <span>통합 관리 부재</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Concept -->
+            <div class="section concept-section">
+                <div class="section-tag"><span class="num">2</span> CONCEPT</div>
+                <h2>서비스 컨셉</h2>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="card-title">&ldquo;똑똑하고 다정한 나의 임신 메이트&rdquo;</div>
+                        <ul>
+                            <li><span class="highlight">임신 주차별 초개인화 가이드</span> &mdash; 병원 일정, 검사 체크, 영양 관리, 준비물, 주의 음식 등 맞춤 추천</li>
+                            <li><span class="highlight">가전 자동 제어</span> &mdash; '올 무음' 수면 루틴, '노터치' 세탁→건조 자동 연계, '먼지 철벽 방어' 공기청정 루틴</li>
+                            <li><span class="highlight">AI 챗봇</span> &mdash; 임신/출산 정보 제공</li>
+                        </ul>
+                    </div>
+                    <div class="concept-card">
+                        <div class="card-title">&ldquo;엄마의 성향을 파악해 주는 MomBTI&rdquo;</div>
+                        <ul>
+                            <li><span class="highlight">MomBTI 테스트</span> &mdash; 간단한 테스트로 엄마의 성향을 파악하고, 커뮤니티 작성자명 옆 선택형 태그로 표시</li>
+                            <li><span class="highlight">임산부 맞춤형 커뮤니티</span> &mdash; 유사한 성향·상황의 엄마들과 연결되어 원활한 소통과 깊은 공감대 형성</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Touch Point -->
+            <div class="section touchpoint-section">
+                <div class="section-tag"><span class="num">3</span> TOUCH POINT</div>
+                <h2>주요 고객 접점</h2>
+                <div class="tp-list">
+                    <div class="tp-item">
+                        <span class="tp-name">부모모드 홈</span>
+                        <span class="tp-desc">임신 주차·D-DAY, 주차별 To-Do, 남편 응원 메시지, 추천 가전 루틴 카드</span>
+                    </div>
+                    <div class="tp-item">
+                        <span class="tp-name">가전 제어</span>
+                        <span class="tp-desc">에어컨·공기청정기 맞춤 모드, 알림음 제어, 시기별 자동화 루틴</span>
+                    </div>
+                    <div class="tp-item">
+                        <span class="tp-name">공유·기록</span>
+                        <span class="tp-desc">가족 공유 캘린더·체크리스트, 사진 첨부 임신 일기 작성·조회</span>
+                    </div>
+                    <div class="tp-item">
+                        <span class="tp-name">커뮤니티</span>
+                        <span class="tp-desc">MomBTI·머리말 필터링 게시판, 경험 공유 공간</span>
+                    </div>
+                    <div class="tp-item">
+                        <span class="tp-name">AI 챗봇</span>
+                        <span class="tp-desc">홈에서 즉시 접근, 증상별·주차별 맞춤 질의응답 인터페이스</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Key Value -->
+            <div class="section value-section">
+                <div class="section-tag"><span class="num">4</span> KEY VALUE</div>
+                <h2>고객 핵심 가치</h2>
+                <div class="value-list">
+                    <div class="value-item">
+                        <div class="value-num">1</div>
+                        <div class="value-text">
+                            <div class="vtitle">검증된 안심 정보 획득</div>
+                            <div class="vdesc">맘카페 의존 피로도를 줄이고 신뢰할 수 있는 정보를 빠르게 제공</div>
+                        </div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-num">2</div>
+                        <div class="value-text">
+                            <div class="vtitle">주차 기반 맞춤 행동 가이드</div>
+                            <div class="vdesc">임신 주차별 To-do로 준비 누락 방지, 막연한 불안감 해소</div>
+                        </div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-num">3</div>
+                        <div class="value-text">
+                            <div class="vtitle">환경 제어의 지능적 자동화</div>
+                            <div class="vdesc">입덧·수면·체온 변화에 맞춰 ThinQ 가전이 최적 실내 환경 조성</div>
+                        </div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-num">4</div>
+                        <div class="value-text">
+                            <div class="vtitle">커뮤니티 탐색 효율화 & 깊은 공감</div>
+                            <div class="vdesc">MomBTI로 유사 성향 엄마와 연결, 깊은 정서적 공감대 형성</div>
+                        </div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-num">5</div>
+                        <div class="value-text">
+                            <div class="vtitle">기록을 통한 감성 경험 극대화</div>
+                            <div class="vdesc">일기·사진 기록을 앨범으로 남기는 감성적 케어</div>
+                        </div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-num">6</div>
+                        <div class="value-text">
+                            <div class="vtitle">임신~산후까지 동반자적 관계</div>
+                            <div class="vdesc">일회성 유틸리티가 아닌, 긴 생애 여정을 함께하는 라이프스타일 플랫폼</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            &copy; LG Electronics &middot; ThinQ Parenting Mode Service Definition &middot; Confidential
+        </div>
+
+    </div>
+</body>
+</html>
